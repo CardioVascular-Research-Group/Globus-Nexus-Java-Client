@@ -37,41 +37,18 @@ import org.json.JSONObject;
 
 public class GlobusOnlineRestClient extends BaseNexusRestClient {
 	
-	String GO_HOST;
-	String oauthSecret;
-	Cookie[] sessionCookies;
+	private String GO_HOST;
+	private String oauthSecret;
+	private Cookie[] sessionCookies;
 	
 	public GlobusOnlineRestClient() throws NexusClientException{
-		testInit();
 		init("", "", "");
 	}
 	
-	private void testInit(){
-		Properties props = new Properties();
-		
-	     try {
-	            String fileName = "/resources/nexus.config";            
-	            InputStream stream = GlobusOnlineRestClient.class.getResourceAsStream(fileName);
-
-	            props.load(stream);
-
-	            GO_HOST = (props.getProperty("globus.url", "missing"));
-	            community = (props.getProperty("globus.default.community", "missing"));
-	            
-	    		if(GO_HOST.equals("missing")){
-	    			logger.error("Host URL Configuration missing.");
-	    			System.out.println("Missing config item");
-	    			return;
-	    		}
-	            
-	        } catch (FileNotFoundException e) {
-	        	logger.error("authenticator.config not found.");
-	            e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	public GlobusOnlineRestClient(String url, String community) throws NexusClientException{
+		this.GO_HOST = url;
+		this.community = community;
 	}
-
 
     public void init(String username, String password, String oauthSecret) throws NexusClientException{
 //      Initial login supported either using username+password or

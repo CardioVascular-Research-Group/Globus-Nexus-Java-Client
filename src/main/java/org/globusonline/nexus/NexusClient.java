@@ -35,25 +35,16 @@ Root object for interacting with the Nexus service
 public class NexusClient {
 
 	private GlobusOnlineRestClient restClient;
-	
 	private JSONObject workingUser = null;
 	
-	public NexusClient() throws NexusClientException{
-		
-		initialize();
-		
-	}
-	
-	private void initialize() throws NexusClientException{
-		
+	public NexusClient(String url, String community) throws NexusClientException{
 		restClient = new GlobusOnlineRestClient();
-		
 	}
 	
 	public boolean authenticateUserPassword(String username, String password) throws NexusClientException{
 		
-		JSONObject result = restClient.usernamePasswordLogin(username, password);
-		return (result != null);
+		JSONObject workingUser = restClient.usernamePasswordLogin(username, password);
+		return (workingUser != null);
 	}
 	
 //Public User Operations*******************************************
@@ -71,6 +62,27 @@ public class NexusClient {
 	public String getUserFullname(String userId, UUID groupId) throws NexusClientException{
 		
 			return getJsonFullname(getWorkingUser(groupId, userId));
+	}
+	
+	public String getUserFullName(){
+		return getUserValue("fullname");
+	}
+	
+	public String getUserEmail(){
+		return getUserValue("email");
+	}
+	
+	private String getUserValue(String key){
+		
+		String value = "";
+		
+		try {
+			value = (String)workingUser.get(key);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return value;
 	}
 	
 
